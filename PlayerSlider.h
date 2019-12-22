@@ -18,14 +18,19 @@ public:
     void        getplayer(ThePlayer* play);
     void        setProgress(qint64);
     signals:
+    void        costomSliderClicked();
     void        sigProgress(qint64);
+
 private:
     bool        m_bPressed;
-    int         curren;
     ThePlayer   *player;
 
+
+protected:
+    void mousePressEvent(QMouseEvent *e);//重写QSlider的mousePressEvent事件
 public slots:
     void onTimerOut();
+    //void slider_clicked();
 /*
 signals:
     void        AA(QMouseEvent *);  //自己的独立函数

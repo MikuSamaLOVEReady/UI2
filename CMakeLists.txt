@@ -15,7 +15,7 @@ find_package(Qt5 COMPONENTS Widgets Multimedia MultimediaWidgets Network Xml Gui
 
 
 #add_executable(project1 main.cpp)
-set(SOURCE_FILES tomeo.cpp the_player.cpp the_player.h the_button.cpp the_button.h PlayerSlider.cpp PlayerSlider.h)
+set(SOURCE_FILES tomeo.cpp the_player.cpp the_player.h the_button.cpp the_button.h PlayerSlider.cpp PlayerSlider.h buttom_label.cpp buttom_label.h)
 add_executable(cw2 ${SOURCE_FILES})
 
 target_link_libraries(cw2 Qt5::Widgets Qt5::Multimedia Qt5::MultimediaWidgets Qt5::Network Qt5::Xml Qt5::Gui)

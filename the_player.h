@@ -12,6 +12,8 @@
 #include <vector>
 #include <QTimer>
 
+class PlayerSlider;
+
 using namespace std;
 
 class ThePlayer : public QMediaPlayer {
@@ -23,13 +25,14 @@ private:
     std::vector<TheButton*>* buttons;
     QTimer* mTimer;
     long updateCount = 0;
+    PlayerSlider *cur_slider;
+    PlayerSlider *vol_slider;
+    QTimer *TM;
 
 public:
     ThePlayer() : QMediaPlayer(NULL) {
         setVolume(30); // be slightly less annoying
         connect (this, SIGNAL (stateChanged(QMediaPlayer::State)), this, SLOT (playStateChanged(QMediaPlayer::State)) );
-
-        printf("BB\n");
         //setPosition();
         mTimer = new QTimer(NULL);
         mTimer->setInterval(1000); // 1000ms is one second between ...
@@ -37,6 +40,9 @@ public:
         connect( mTimer, SIGNAL (timeout()), SLOT ( shuffle() ) ); // ...running shuffle method
         //
     }
+
+    void   getslider(PlayerSlider* slid1,PlayerSlider* slid2);
+    void   gertimer(QTimer* TIM);
 
     // all buttons have been setup, store pointers here
     void setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i);
@@ -49,11 +55,15 @@ private slots:
 
 
 
+
 public slots:
 
     // start playing this ButtonInfo
     void jumpTo (TheButtonInfo* button);
     void slider_clicked(); //函数类型 和 参数 未定
+    void slider_clicked2();
+    void progress_moved();
+    void progress_released();
 };
 
 #endif //CW2_THE_PLAYER_H

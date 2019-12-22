@@ -3,6 +3,7 @@
 //
 
 #include "the_player.h"
+#include <PlayerSlider.h>
 
 // all buttons have been setup, store pointers here
 void ThePlayer::setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i){
@@ -31,14 +32,40 @@ void ThePlayer::playStateChanged (QMediaPlayer::State ms) {
     }
 }
 
+
 void ThePlayer::slider_clicked(){
-    printf("AAA");
- //   setPosition();
+
+   this->setPosition(cur_slider->value()*this->duration()/100);
 }
 
+void ThePlayer::slider_clicked2(){
+    this->setVolume(vol_slider->value());
+    //printf("%d\n",vol_slider->value());
+}
+
+void ThePlayer::progress_moved(){
+    TM->stop();
+    this->setPosition(cur_slider->value()*this->duration()/100);
+    //printf("dKMKMKM");
+}
+
+
+void ThePlayer::progress_released(){
+    TM->start();
+}
+
+void ThePlayer::getslider(PlayerSlider* slid1,PlayerSlider* slid2){
+    cur_slider=slid1;
+    vol_slider=slid2;
+};
+
+void ThePlayer::gertimer(QTimer* TIM){
+    TM=TIM;
+}
 
 
 void ThePlayer::jumpTo (TheButtonInfo* button) {
     setMedia( * button -> url); //«–ªª ”∆µ
     play();
 }
+

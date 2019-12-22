@@ -28,6 +28,7 @@
 #include "the_player.h"
 #include "the_button.h"
 #include "PlayerSlider.h"
+#include "buttom_label.h"
 
 
 using namespace std;
@@ -95,6 +96,7 @@ int main(int argc, char *argv[]) {
     ThePlayer *player = new ThePlayer;
     player->setVideoOutput(videoWidget); //
 
+
     //float persentage;
     //persentage = player->position()/player->duration();
 
@@ -113,7 +115,7 @@ int main(int argc, char *argv[]) {
     buttonWidget->setLayout(layout);
 
 
-    QLabel *lab1 = new QLabel();
+    buttomlabel *lab1 = new buttomlabel();
 
    // TheButton::connect(this,SIGNAL(released()),lab1,SLOT(setText(QString*) ) );
 
@@ -122,7 +124,7 @@ int main(int argc, char *argv[]) {
     for ( int i = 0; i < 7; i++ ) {
         TheButton *button = new TheButton(buttonWidget);
         button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), player, SLOT (jumpTo(TheButtonInfo* ))); // when clicked, tell the player to play.
-        //button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), lab1, SLOT (setText(TheButtonInfo*)));
+        button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), lab1, SLOT (setbutText(TheButtonInfo*)));
         button->setMaximumWidth(210);
         button->setMaximumHeight(140);
         buttons.push_back(button);
@@ -158,27 +160,67 @@ int main(int argc, char *argv[]) {
 
     window.setWindowTitle("tomeo");
     PlayerSlider *slider = new PlayerSlider();
+    slider->setOrientation(Qt::Horizontal);
+
+    PlayerSlider *slider_volume = new PlayerSlider();
+    slider_volume->setOrientation(Qt::Horizontal);
+    //slider_volume->setRange(0,50);
+
+
+
+
 
 
 
     QTimer *SlideTimer = new QTimer(player);
     SlideTimer->setInterval(1000); // 1000ms is one second between ...
     SlideTimer->start();
-    //float persentage;
-    //persentage = player->position()/player->duration();
     slider->getplayer(player);
+    player->getslider(slider,slider_volume);
+    player->gertimer(SlideTimer);
+    //QTimer::connect(SlideTimer, SIGNAL(timeout()), slider, SLOT(onTimerOut()))；
     QTimer::connect(SlideTimer, SIGNAL(timeout()), slider, SLOT(onTimerOut()));
 
+    PlayerSlider::connect(slider,SIGNAL(sliderMoved(int)),player,SLOT(progress_moved()));//拖动滚动条
+    PlayerSlider::connect(slider,SIGNAL(sliderReleased()),player,SLOT(progress_released()));
 
+    PlayerSlider::connect(slider,SIGNAL(sliderPressed()),player,SLOT(slider_clicked()));
+    //PlayerSlider::connect(slider_volume,SIGNAL(sliderPressed()),player,SLOT(slider_clicked2())); //音量控制
+    PlayerSlider::connect(slider_volume,SIGNAL(sliderMoved(int)),player,SLOT(slider_clicked2())); //音量控制
 
-    //PlayerSlider::connect(slider,SIGNAL(sliderPressed()),player,SLOT(slider_clicked()));
     //slider 被按下时 激活函数 然后
+    QPushButton* b_start = new QPushButton();
+    QPushButton* b_pase = new QPushButton();
+
+    b_start->setText("START");
+    b_pase->setText("PAUSE");
+    QPushButton::connect(b_pase,SIGNAL(clicked()),player,SLOT(pause()));
+    QPushButton::connect(b_start,SIGNAL(clicked()),player,SLOT(play()));
+
+    QLabel* time = new QLabel("TIME");
+    //time->setTextFormat();
+    time->setStyleSheet(" color : green;");
+
+    QLabel* volume = new QLabel("Volume");
+    volume->setStyleSheet(" color : green;");
+
+
+    QHBoxLayout *controlbar =new QHBoxLayout();
+    controlbar->addWidget(time);
+    controlbar->addWidget(slider);
+    controlbar->addWidget(volume);
+    controlbar->addWidget(slider_volume);
+    controlbar->addWidget(b_pase);
+    controlbar->addWidget(b_start);
+
 
 
 
     // add the video and the buttons to the top level widget
+    top->addWidget(lab1);
 	top->addWidget(videoWidget);
-    top->addWidget(slider);
+    //top->addWidget(slider); //这里应该是一个layout
+    top->addLayout(controlbar);
     top->addWidget(scroll);
     top->setStretchFactor(videoWidget, 3);
     //top->setStretchFactor(scroll);

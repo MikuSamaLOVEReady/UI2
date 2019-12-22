@@ -6,8 +6,9 @@
 
 PlayerSlider::PlayerSlider(QWidget * parent) : QSlider(parent)
 {
-    setOrientation(Qt::Horizontal);
-    setRange(0,1000);
+    //setOrientation(Qt::Horizontal);
+    //setRange(0,100);
+    //printf("MMMMMMM");
 
 
 
@@ -16,25 +17,29 @@ PlayerSlider::PlayerSlider(QWidget * parent) : QSlider(parent)
 
 void PlayerSlider::getplayer(ThePlayer* play){
     player=play;
-    printf("getget");
+   // printf("getget");
 
 }
 
 void PlayerSlider::onTimerOut(){
 
-    setValue( player->position()*1000/player->duration());
-    
+    setValue( player->position()*100/player->duration());
+
 }
-//发出者
-/*
-void PlayerSlider::mousePress(QMouseEvent *e)
+
+
+
+
+void PlayerSlider::mousePressEvent(QMouseEvent *e)
 {
-    m_bPressed = true;
-    QSlider::mousePressEvent(e);//必须有这句，否则手动不能移动滑块
-
-
+    QSlider::mousePressEvent(e);
+    double pos = e->pos().x() / (double)width();
+    setValue(pos * (100 - 0) + 0);
+    emit sliderPressed();
 }
 
+
+/*
 void PlayerSlider::mouseMove(QMouseEvent *e)
 {
     QSlider::mouseMoveEvent(e);//必须有这句，否则手动不能移动滑块
